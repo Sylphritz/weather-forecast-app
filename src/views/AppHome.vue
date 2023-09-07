@@ -1,6 +1,6 @@
 <template>
   <div
-    class="content-body mx-auto bg-gradient-to-b from-white to-gray-100 p-7 shadow-sm rounded-lg"
+    class="content-body mx-auto bg-gradient-to-b from-white to-gray-100 dark:from-black dark:to-sky-950 p-7 shadow-sm dark:shadow-gray-700 rounded-lg"
   >
     <div class="mb-6">
       <form>
@@ -8,11 +8,11 @@
           id="city"
           type="text"
           placeholder="Enter your city name"
-          class="w-48 p-2 mr-2 border rounded-lg border-sky-300"
+          class="w-48 py-2 px-3 mr-2 border rounded-lg border-sky-300"
         />
         <button
           type="submit"
-          class="p-2 px-5 rounded-lg text-md bg-sky-500 text-white"
+          class="p-2 px-5 border border-sky-500 dark:border-sky-800 rounded-lg text-md bg-sky-500 dark:bg-sky-800 text-white"
           @click.prevent=""
         >
           <i class="fa-solid fa-location-crosshairs"></i> Find
@@ -21,7 +21,7 @@
     </div>
     <div class="flex flex-row">
       <div class="basis-1/3">
-        <div class="bg-sky-500 p-6 rounded-lg text-white">
+        <div class="bg-sky-500 dark:bg-sky-800 p-6 rounded-lg text-white">
           <h2 class="text-4xl font-semibold mb-2">Today</h2>
           <div class="mb-2 opacity-80">Wednesday, Sep 6, 2023</div>
           <div class="mb-2 pt-6 pb-2 font-semibold text-6xl text-center">
@@ -41,7 +41,7 @@
           </div>
         </div>
       </div>
-      <div class="basis-2/3 pl-3">
+      <div class="basis-2/3 pl-6">
         <h3 class="mb-5 text-2xl">Next 4 days</h3>
         <div class="flex flex-row">
           <ForecastCard />
