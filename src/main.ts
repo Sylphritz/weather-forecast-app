@@ -1,13 +1,13 @@
-import './assets/styles/base.scss'
+import '@fontsource/ibm-plex-sans/400.css'
+import '@fontsource/ibm-plex-sans/600.css'
+import '@fortawesome/fontawesome-free/css/all.min.css'
+import './assets/styles/main.scss'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
-
-// Load stores
-// import './stores/theme'
 
 const app = createApp(App)
 
