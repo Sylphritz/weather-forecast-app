@@ -8,7 +8,7 @@
           id="city"
           type="text"
           placeholder="Enter your city name and press Enter"
-          class="w-96 py-2 px-3 mr-2 border rounded-lg border-sky-300"
+          class="w-96 py-2 px-3 mr-2 border rounded-lg border-sky-300 dark:bg-sky-900 dark:border-gray-500"
         />
         or
         <button
@@ -53,10 +53,12 @@
       </div>
     </div>
   </div>
+  <LocationSearchModal />
 </template>
 
 <script setup lang="ts">
 import ForecastCard from '@/components/Home/ForecastCard.vue'
+import LocationSearchModal from '@/components/Home/LocationSearchModal.vue'
 </script>
 
 <style scoped>
