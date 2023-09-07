@@ -7,15 +7,16 @@
         <input
           id="city"
           type="text"
-          placeholder="Enter your city name"
-          class="w-48 py-2 px-3 mr-2 border rounded-lg border-sky-300"
+          placeholder="Enter your city name and press Enter"
+          class="w-96 py-2 px-3 mr-2 border rounded-lg border-sky-300"
         />
+        or
         <button
           type="submit"
-          class="p-2 px-5 border border-sky-500 dark:border-sky-800 rounded-lg text-md bg-sky-500 dark:bg-sky-800 text-white"
+          class="ml-2 p-2 px-5 border border-sky-500 dark:border-sky-800 rounded-lg text-md bg-sky-500 dark:bg-sky-800 text-white"
           @click.prevent=""
         >
-          <i class="fa-solid fa-location-crosshairs"></i> Find
+          <i class="fa-solid fa-location-crosshairs"></i> Auto detect
         </button>
       </form>
     </div>
