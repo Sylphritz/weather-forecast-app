@@ -10,16 +10,20 @@ export default defineStore('userLocation', {
     getGPSLocation() {
       this.fetching = true
 
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.setLocation(position.coords.latitude, position.coords.longitude)
+      return new Promise((resolve) => {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            this.setLocation(position.coords.latitude, position.coords.longitude)
 
-          this.fetching = false
-        },
-        () => {
-          this.fetching = false
-        }
-      )
+            this.fetching = false
+            resolve(true)
+          },
+          () => {
+            this.fetching = false
+            resolve(false)
+          }
+        )
+      })
     },
     setLocation(lat: number, lng: number) {
       this.latitude = lat

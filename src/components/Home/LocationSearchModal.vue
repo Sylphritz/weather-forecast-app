@@ -1,7 +1,7 @@
 <template>
   <!-- pointer-events-none -->
   <div
-    class="absolute top-0 left-0 w-full h-full bg-slate-800/25 backdrop-blur-sm"
+    class="absolute top-0 left-0 w-full h-full bg-slate-800/25 backdrop-blur-sm z-50"
     v-if="props.open"
     @click="closeModal()"
   >

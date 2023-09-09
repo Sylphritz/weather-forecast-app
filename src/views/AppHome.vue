@@ -2,44 +2,30 @@
   <div
     class="content-body mx-auto bg-gradient-to-b from-white to-gray-100 dark:from-black dark:to-sky-950 p-7 shadow-sm dark:shadow-gray-700 rounded-lg"
   >
-    <div class="mb-6">
-      <input
-        id="city"
-        type="search"
-        placeholder="Enter your city name and press Enter"
-        class="w-96 py-2 px-3 mr-2 border rounded-lg border-sky-300 dark:bg-sky-900 dark:border-gray-500"
-        v-model="manualSearch.textInput"
-        @keydown.enter="getLocations"
-      />
-      or
-      <button
-        class="ml-2 p-2 px-5 border border-sky-500 dark:border-sky-800 rounded-lg text-md bg-sky-500 dark:bg-sky-800 hover:bg-sky-600 dark:hover:bg-sky-700 active:bg-sky-700 dark:active:bg-sky-800 text-white"
-        @click.prevent="userLocation.getGPSLocation"
-      >
-        <i class="fa-solid fa-location-crosshairs mr-1"></i> Auto detect
-      </button>
-    </div>
+    <LocationSearch :get-weather-information="getWeatherInformation" />
     <div
-      v-if="locationSpecified && !userLocation.fetching && !fetchingData"
+      v-if="locationSpecified && !userLocation.fetching && !fetchingData && weatherInfo"
       class="flex flex-row relative overflow-hidden"
     >
       <div class="basis-1/3">
         <div class="bg-sky-500 dark:bg-sky-800 p-6 rounded-lg text-white">
           <h2 class="text-4xl font-semibold mb-2">Today</h2>
-          <div class="mb-2 opacity-80">Wednesday, Sep 6, 2023</div>
+          <div class="mb-2 opacity-80">
+            {{ formatDate(weatherInfo.current_weather.time, longDateFormat) }}
+          </div>
           <div class="mb-2 pt-6 pb-2 font-semibold text-6xl text-center">
             <i class="fa-solid fa-cloud mr-1"></i>
-            69<sup class="text-xl align-super">°C</sup>
+            {{ weatherInfo.current_weather.temperature }}<sup class="text-xl align-super">°C</sup>
           </div>
           <div class="pb-10 text-center text-2xl font-semibold">Cloudy</div>
           <div class="flex flex-row text-center">
             <div class="basis-1/2">
-              <div class="mb-2 opacity-80 text-sm">Humidity</div>
-              <div>45%</div>
+              <div class="mb-2 opacity-80 text-sm">Wind speed</div>
+              <div>{{ weatherInfo.current_weather.windspeed }} Km/h</div>
             </div>
             <div class="basis-1/2">
-              <div class="mb-2 opacity-80 text-sm">Wind speed</div>
-              <div>19.2 km/j</div>
+              <div class="mb-2 opacity-80 text-sm">Wind direction</div>
+              <div>{{ weatherInfo.current_weather.winddirection }}°</div>
             </div>
           </div>
         </div>
@@ -47,10 +33,11 @@
       <div class="basis-2/3 pl-6">
         <h3 class="mb-5 text-2xl">Next 4 days</h3>
         <div class="flex flex-row">
-          <ForecastCard />
-          <ForecastCard />
-          <ForecastCard />
-          <ForecastCard />
+          <ForecastCard
+            v-for="dailyInfo in mappedWeatherInfo"
+            :key="dailyInfo.time"
+            :daily-info="dailyInfo"
+          />
         </div>
       </div>
     </div>
@@ -64,54 +51,67 @@
       Please specify the location you want to get the weather forecast information.
     </div>
   </div>
-  <LocationSearchModal
-    :open="manualSearch.open"
-    :search-results="manualSearch.searchResults"
-    :close-modal="closeModal"
-    :set-location="setLocation"
-  />
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
-import { getLocationSuggestions } from '@/api/openMeteo/geocoding'
+import { computed, ref } from 'vue'
+import { format } from 'date-fns'
+
+import { getWeatherForecast } from '@/api/openMeteo/weather'
+import type { WeatherInformationResponse, DailyInfo } from '@/api/openMeteo/types'
+
 import useUserLocation from '@/stores/userLocation'
 import ForecastCard from '@/components/Home/ForecastCard.vue'
-import LocationSearchModal from '@/components/Home/LocationSearchModal.vue'
-import type { LocationSuggestion } from '@/api/openMeteo/types'
+import LocationSearch from '@/components/Home/LocationSearch.vue'
+
+const longDateFormat = 'EEEE, MMM d, yyyy'
+const maxForecastDays = 4
 
 const fetchingData = ref(false)
+const weatherInfo = ref<WeatherInformationResponse | null>()
 
 const userLocation = useUserLocation()
 const locationSpecified = computed(() => {
   return userLocation.latitude && userLocation.longitude
 })
+const mappedWeatherInfo = computed<DailyInfo[]>(() => {
+  if (!weatherInfo.value) {
+    return []
+  }
 
-const manualSearch = reactive({
-  open: false,
-  textInput: '',
-  searchResults: [] as LocationSuggestion[]
+  const mappedInfo: DailyInfo[] = []
+
+  weatherInfo.value.daily.time.forEach((day, index) => {
+    if (index === 0 || index > maxForecastDays) {
+      return
+    }
+
+    mappedInfo.push({
+      time: day,
+      weathercode: weatherInfo.value!.daily.weathercode[index],
+      temperature_2m_max: weatherInfo.value!.daily.temperature_2m_max[index],
+      temperature_2m_min: weatherInfo.value!.daily.temperature_2m_min[index],
+      precipitation_probability_max: weatherInfo.value!.daily.precipitation_probability_max[index]
+    })
+  })
+
+  return mappedInfo
 })
 
-const getLocations = async () => {
-  manualSearch.open = true
-  manualSearch.searchResults = []
-  manualSearch.searchResults = (await getLocationSuggestions(manualSearch.textInput)).results
-}
-
-const closeModal = () => (manualSearch.open = false)
-
-const setLocation = (name: string, latitude: number, longitude: number) => {
-  manualSearch.textInput = name
-  userLocation.setLocation(latitude, longitude)
-
-  getWeatherInformation()
-
-  closeModal()
-}
-
-const getWeatherInformation = () => {
+const getWeatherInformation = async () => {
   fetchingData.value = true
+
+  if (!userLocation.latitude || !userLocation.longitude) {
+    return
+  }
+
+  weatherInfo.value = await getWeatherForecast(userLocation.latitude, userLocation.longitude)
+
+  fetchingData.value = false
+}
+
+const formatDate = (dateString: string, dateFormat: string) => {
+  return format(new Date(dateString), dateFormat)
 }
 </script>
 
