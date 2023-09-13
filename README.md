@@ -1,5 +1,7 @@
 # Weather Forecast Web Application (Made with Vue.js)
 
+### [Live Demo](https://vue-weather-app-codementor.netlify.app/)
+
 The app is a simple weather forecast web application. You enter the location name you want or let the browser detect your location for you, and then the app will show you the weather forecast of the specified location.
 
 This is a Vue project made to showcase various aspects of the Vue.js framework and is purely used for educational purposes.
