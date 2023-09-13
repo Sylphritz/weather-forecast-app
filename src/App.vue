@@ -6,7 +6,7 @@
   >
     <AppHeader />
 
-    <RouterView />
+    <router-view />
 
     <AppFooter />
   </div>

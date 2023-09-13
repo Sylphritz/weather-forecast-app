@@ -6,14 +6,14 @@ This is a Vue project made to showcase various aspects of the Vue.js framework a
 
 The app utilizes the following tools and libraries:
 
-- **TypeScript** - to add type checking to the project
-- **Font Awesome icons** - for weather icons
-- **Fontsource** - self-hosted Google Fonts
-- **Axios** - for fetching data from the Open Meteo API service
-- **date-fns** - for formatting date and time
-- **Pinia** - Vue's official state management library. This is for storing user's location information
-- **Vue Router** - for routing and stuff
-- **TailwindCSS** - for an easier time building the UI
+- **TypeScript** - to add type checking to the project.
+- **Font Awesome icons** - for weather icons.
+- **Fontsource** - self-hosted Google Fonts.
+- **Axios** - for fetching data from the Open Meteo API service.
+- **date-fns** - for formatting date and time.
+- **Pinia** - Vue's official state management library. This is for storing user's location information and for saving/loading user's dark mode preference.
+- **Vue Router** - for routing and stuff.
+- **TailwindCSS** - for an easier time building the UI.
 
 Feel free to fork and open pull requests if you're interested in contributing.
 
