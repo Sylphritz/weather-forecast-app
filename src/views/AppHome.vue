@@ -14,10 +14,11 @@
             {{ formatDate(weatherInfo.current_weather.time, longDateFormat) }}
           </div>
           <div class="mb-2 pt-6 pb-2 font-semibold text-6xl text-center">
-            <i class="fa-solid fa-cloud mr-1"></i>
-            {{ weatherInfo.current_weather.temperature }}<sup class="text-xl align-super">°C</sup>
+            <i :class="`${iconClass} mr-1`"></i>
+            {{ Math.round(weatherInfo.current_weather.temperature)
+            }}<sup class="text-xl align-super">°C</sup>
           </div>
-          <div class="pb-10 text-center text-2xl font-semibold">Cloudy</div>
+          <div class="pb-10 text-center text-2xl font-semibold">{{ weatherName }}</div>
           <div class="flex flex-row text-center">
             <div class="basis-1/2">
               <div class="mb-2 opacity-80 text-sm">Wind speed</div>
@@ -63,6 +64,7 @@ import type { WeatherInformationResponse, DailyInfo } from '@/api/openMeteo/type
 import useUserLocation from '@/stores/userLocation'
 import ForecastCard from '@/components/Home/ForecastCard.vue'
 import LocationSearch from '@/components/Home/LocationSearch.vue'
+import { WEATHER_ICON_MAP, WEATHER_NAMES } from '@/constants/weather'
 
 const longDateFormat = 'EEEE, MMM d, yyyy'
 const maxForecastDays = 4
@@ -74,6 +76,16 @@ const userLocation = useUserLocation()
 const locationSpecified = computed(() => {
   return userLocation.latitude && userLocation.longitude
 })
+const iconClass = computed(
+  () =>
+    WEATHER_ICON_MAP[
+      `${weatherInfo.value?.current_weather.weathercode}` as keyof typeof WEATHER_ICON_MAP
+    ]
+)
+const weatherName = computed(
+  () =>
+    WEATHER_NAMES[`${weatherInfo.value?.current_weather.weathercode}` as keyof typeof WEATHER_NAMES]
+)
 const mappedWeatherInfo = computed<DailyInfo[]>(() => {
   if (!weatherInfo.value) {
     return []
