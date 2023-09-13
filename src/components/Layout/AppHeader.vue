@@ -1,17 +1,15 @@
 <template>
-  <!-- TODO: Update the links -->
   <div class="p-6 flex justify-end">
-    <RouterLink
+    <router-link
       class="mr-5 font-semibold hover:text-gray-700 dark:hover:text-gray-400 opacity-70 hover:opacity-100"
       :to="{ name: 'home' }"
-      >Home</RouterLink
+      >Home</router-link
     >
-    <a
-      href="#"
+    <router-link
       class="mr-5 font-semibold hover:text-gray-700 dark:hover:text-gray-400 opacity-70 hover:opacity-100"
-      >About</a
+      :to="{ name: 'about' }"
+      >About</router-link
     >
-    <!-- TODO: Maybe turn the hardcoded URL into a constant? -->
     <a
       href="https://github.com/Sylphritz/weather-forecast-app"
       class="mr-5 font-semibold hover:text-gray-700 dark:hover:text-gray-400 opacity-70 hover:opacity-100"
@@ -46,5 +44,3 @@ onMounted(() => {
   }
 })
 </script>
-
-<style scoped></style>
